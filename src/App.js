@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import "./App.css";
+import NavBar from "./containers/NavBar";
+import UserProfile from "./containers/UserProfile";
+import ClientProfile from "./containers/ClientProfile";
+import ClientsTable from "./containers/ClientsContainer";
+
+class App extends Component {
+  state = {
+    user_id: null,
+    clients: []
+  };
+  componentDidMount() {
+    fetch("http://localhost:3000/clients")
+      .then(res => res.json())
+      .then(console.log);
+  }
+
+  render() {
+    return (
+      <Router>
+        <NavBar />
+        <Route path="/all_clients" render={() => <ClientsTable />} />
+        <Route path="/client" render={() => <ClientProfile />} />
+        <Route path="/user" render={() => <UserProfile />} />
+        {/* <Resources />
+      <Actions /> */}
+      </Router>
+    );
+  }
 }
 
 export default App;
