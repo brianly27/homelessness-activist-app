@@ -17,19 +17,18 @@ class SurveyForm extends Component {
     return (
       <Form>
         <Form.Group inline>
-          <label>Size</label>
+          <label>Situation</label>
           <Form.Radio
             label="I am satisfied with my current situation"
-            value="sm"
-            checked={value === "sm"}
+            value="false"
+            checked={value === "false"}
             onChange={this.handleChange}
           />
           <Form.Radio
             label="I want to get out of my current situation"
-            value="md"
-            checked={value === "md"}
+            value="true"
+            checked={value === "true"}
             onChange={this.handleChange}
-          />
           />
         </Form.Group>
         <Form.Checkbox label="Currently needs proof of identification" />

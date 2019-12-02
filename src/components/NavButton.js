@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "semantic-ui-react";
 
-const NavButton = () => (
+const NavButton = ({ buttonName }) => (
   <div>
-    <Button primary>Primary</Button>
+    <Button primary>{buttonName}</Button>
   </div>
 );
 

@@ -6,14 +6,18 @@ import NavButton from "../components/NavButton";
 const NavBar = () => (
   <>
     <Header icon="compass" content="Homelessness-Activist-App" />
-    <NavLink to="/">
-      <NavButton />
-    </NavLink>
     <NavLink to="/user">
-      <NavButton />
+      <NavButton buttonName="My Profile" />
+    </NavLink>
+    <NavLink to="/actions">
+      <NavButton buttonName="New Client" />
     </NavLink>
     <NavLink to="/all_clients">
-      <NavButton />
+      <NavButton buttonName="All Clients" />
+    </NavLink>
+    {/* probably dont need to client here */}
+    <NavLink to="/client" nameProp="">
+      <NavButton buttonName="Client" />
     </NavLink>
   </>
 );
