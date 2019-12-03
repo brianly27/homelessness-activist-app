@@ -13,7 +13,7 @@ const SurveyStatus = () => (
     image="/images/avatar/large/elliot.jpg"
     header="Patrick"
     meta="Client"
-    description="Elliot is a sound engineer living in Nashville who enjoys playing guitar and hanging with his cat."
+    description="Survey Status."
     extra={extra}
   />
 );

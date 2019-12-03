@@ -9,15 +9,15 @@ const NavBar = () => (
     <NavLink to="/user">
       <NavButton buttonName="My Profile" />
     </NavLink>
-    <NavLink to="/actions">
+    <NavLink to="/create_client">
       <NavButton buttonName="New Client" />
     </NavLink>
     <NavLink to="/all_clients">
       <NavButton buttonName="All Clients" />
     </NavLink>
     {/* probably dont need to client here */}
-    <NavLink to="/client" nameProp="">
-      <NavButton buttonName="Client" />
+    <NavLink to="/login">
+      <NavButton buttonName="Log Out" />
     </NavLink>
   </>
 );

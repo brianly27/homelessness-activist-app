@@ -7,26 +7,30 @@ import ActionForm from "./ActionForm";
 import ActionStatus from "./ActionStatus";
 
 class ClientProfile extends Component {
-  getGlasses = () => {
-    const id = this.props.match.params.id;
-    let foundGlasses = { image: "", style: "", maker: "" };
-
-    for (let glasses of this.props.glasses) {
-      if (glasses.id == id) {
-        foundGlasses = glasses;
-      }
-    }
-    return foundGlasses;
+  //if there are no c/r relationships, render survey form
+  //if there are c/r relationships, render survey status or survey update
+  state = {
+    isSurveyStatus: true,
+    isSurveyUpdate: false,
+    isSurveyForm: false,
+    isActionStatus: false,
+    isActionForm: false,
+    isActionUpdate: false
   };
+
   render() {
+    const { client } = this.props;
+
+    const clientResources = client ? client.client_resources : "";
+    const clientActions = client ? client.clients_actions : "";
     return (
       <>
-        <ClientCard />
-        <SurveyForm />
-        <SurveyStatus />
+        <ClientCard client={client} />
+        <SurveyForm resources={clientResources} />
+        <SurveyStatus resources={clientResources} />
         {/* maybe i will need to render action form and status inside a container */}
-        <ActionForm />
-        <ActionStatus />
+        <ActionForm resources={clientResources} actions={clientActions} />
+        <ActionStatus resources={clientResources} actions={clientActions} />
       </>
     );
   }
