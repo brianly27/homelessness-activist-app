@@ -22,6 +22,7 @@ class SurveyForm extends Component {
   // this.setState(prevState => ({ identification: !prevState.identification }));
   // change[e.target.name] = !this.state[e.target.name];
   toggle = e => {
+    e.persist();
     console.log(e);
     let change = {};
     this.setState(prevState => ({ identification: !prevState.identification }));
@@ -35,6 +36,8 @@ class SurveyForm extends Component {
   };
 
   handleSubmit = e => {
+    //maybe write a ternary that creates or updates
+    //can it be the same post request? for now, just posting is okay
     this.createResourceNeeds();
   };
   // POST   /clients_resources(.:format)        clients_resources#create

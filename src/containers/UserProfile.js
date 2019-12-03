@@ -7,13 +7,6 @@ import { NavLink } from "react-router-dom";
 import ClientListItem from "../components/ClientListItem";
 
 class UserProfile extends Component {
-  //props include user.user: {}  and user.clients: [{},{}]
-
-  //write a method to map over
-  // componentDidMount() {
-  //   this.renderClients();
-  // }
-
   renderClients = () => {
     const clientComponents = this.props.userData.clients.map(client => {
       return (

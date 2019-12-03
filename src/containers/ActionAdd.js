@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Container } from "semantic-ui-react";
 import Action from "../components/Action";
 
-class ActionForm extends Component {
+class ActionAdd extends Component {
   renderResources = () => {
     //map over array of resources and render each resource
     //call renderActions for each resource
@@ -23,4 +23,4 @@ class ActionForm extends Component {
   }
 }
 
-export default ActionForm;
+export default ActionAdd;

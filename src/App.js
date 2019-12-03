@@ -13,7 +13,7 @@ class App extends Component {
     userId: 1,
     userData: {},
     clients: [],
-    client: {}
+    resources: []
   };
 
   componentDidMount() {
@@ -43,20 +43,59 @@ class App extends Component {
   };
 
   navigateToClient = id => {
-    this.findClient(id);
+    console.log(id);
     return <Redirect to={`/clients/${id}`} />;
   };
 
-  findClient = id => {
-    const client = this.state.clients.find(client => client.id === id);
-    this.setState({
-      client
-    });
+  //create new client methods
+
+  addNewClientToState = client => {
+    console.log("before setstate", client);
+    this.setState(
+      {
+        clients: [...this.state.clients, client] //check if this is right
+      },
+      console.log("after post", this.state.clients)
+    );
   };
 
+  //propbably have to fetch resrouce name and description based on array of resource ids | find unique ids
+  fetchResources = () => {
+    fetch("http://localhost:3000/resources")
+      .then(res => res.json())
+      .then(resources => {
+        this.setState({
+          resources
+        });
+      });
+  };
+
+  // fetchClientResources = url => {
+  //   return fetch(url, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json"
+  //     },
+  //     body: JSON.stringify({
+  //       identification,
+  //       address,
+  //       foodStamps,
+  //       busPass,
+  //       cellphone,
+  //       healthCare,
+  //       employmentServices,
+  //       notes
+  //     })
+  //   }).then(resp => resp.json());
+  // };
+
+  //also retreive actions related to each resource
+  //
+
   render() {
-    const { clients, client, userData } = this.state;
-    const { navigateToClient } = this;
+    const { clients, userData } = this.state;
+    const { navigateToClient, addNewClientToState } = this;
     return (
       <Router>
         <NavBar />
@@ -72,7 +111,7 @@ class App extends Component {
         />
         <Route
           path="/clients/:id"
-          render={props => <ClientProfile {...props} clients={client} />}
+          render={props => <ClientProfile {...props} clients={clients} />}
         />
         <Route
           path="/user"
@@ -88,7 +127,11 @@ class App extends Component {
         <Route
           path="/create_client"
           render={props => (
-            <CreateClient {...props} navigateToClient={navigateToClient} />
+            <CreateClient
+              {...props}
+              addNewClientToState={addNewClientToState}
+              navigateToClient={navigateToClient}
+            />
           )}
         />
         {/* <Resource Container /> */}

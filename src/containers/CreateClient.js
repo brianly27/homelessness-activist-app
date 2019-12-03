@@ -19,16 +19,18 @@ class CreateClient extends Component {
   };
 
   handleSubmit = e => {
-    this.createAccount();
+    this.createClient();
   };
 
-  createAccount = () => {
-    this.fetchClient("http://localhost:3000/clients").then(client => {
+  createClient = () => {
+    console.log("before post");
+    this.postClient("http://localhost:3000/clients").then(client => {
+      this.props.addNewClientToState(client);
       this.props.history.push(`/clients/${client.clientId}`);
     });
   };
 
-  fetchClient = url => {
+  postClient = url => {
     const {
       firstName,
       lastName,

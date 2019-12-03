@@ -3,12 +3,21 @@ import { Container } from "semantic-ui-react";
 import ClientCard from "../components/ClientCard";
 import SurveyForm from "../components/SurveyForm";
 import SurveyStatus from "../components/SurveyStatus";
-import ActionForm from "./ActionForm";
+import ActionAdd from "./ActionAdd";
 import ActionStatus from "./ActionStatus";
+import ActionUpdate from "./ActionUpdate";
 
 class ClientProfile extends Component {
   //if there are no c/r relationships, render survey form
   //if there are c/r relationships, render survey status or survey update
+
+  findClient = () => {
+    const href = this.props.location.pathname;
+    const id = href.split("/").pop(-1);
+    const client = this.props.clients.find(client => client.id === id);
+    return client;
+  };
+
   state = {
     isSurveyStatus: true,
     isSurveyUpdate: false,
@@ -16,6 +25,57 @@ class ClientProfile extends Component {
     isActionStatus: false,
     isActionForm: false,
     isActionUpdate: false
+  };
+
+  renderSurveyForm = () => {
+    const { client } = this.props;
+    const clientResources = client ? client.client_resources : "";
+    return <SurveyForm resources={clientResources} />;
+  };
+
+  renderSurveyUpdate = () => {
+    // return SurveyUpdate, pass props, change state
+  };
+
+  renderSurveyStatus = () => {
+    // return SurveyStatus, pass props, change state
+    const { client } = this.props;
+    const clientResources = client ? client.client_resources : "";
+    console.log(clientResources);
+    //async is causing errors
+
+    // const resourceComponents = clientResources.map(resource => {
+    //   return <SurveyStatus resource={resource} />;
+    // });
+    // return resourceComponents;
+  };
+  // renderClients = () => {
+  //   const clientComponents = this.props.userData.clients.map(client => {
+  //     return (
+  //       <NavLink to={`/clients/${client.id}`}>
+  //         <ClientListItem
+  //           id={client.id}
+  //           firstName={client.first_name}
+  //           lastName={client.last_name}
+  //           alias={client.last_name}
+  //           handleClick={this.props.navigateToClient}
+  //         />
+  //       </NavLink>
+  //     );
+  //   });
+  //   return clientComponents;
+  // };
+
+  renderActionStatus = () => {
+    // return SurveyStatus, pass props, change state
+  };
+
+  renderActionForm = () => {
+    // return SurveyStatus, pass props, change state
+  };
+
+  renderActionUpdate = () => {
+    // return SurveyStatus, pass props, change state
   };
 
   render() {
@@ -27,10 +87,12 @@ class ClientProfile extends Component {
       <>
         <ClientCard client={client} />
         <SurveyForm resources={clientResources} />
-        <SurveyStatus resources={clientResources} />
+        {/* async problem */}
+        {client ? this.renderSurveyStatus() : null}
         {/* maybe i will need to render action form and status inside a container */}
-        <ActionForm resources={clientResources} actions={clientActions} />
+        <ActionAdd resources={clientResources} actions={clientActions} />
         <ActionStatus resources={clientResources} actions={clientActions} />
+        <ActionUpdate />
       </>
     );
   }

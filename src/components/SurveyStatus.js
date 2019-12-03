@@ -1,21 +1,16 @@
 import React from "react";
-import { Card, Icon } from "semantic-ui-react";
+import { Header, Image } from "semantic-ui-react";
 
-const extra = (
-  <a>
-    <Icon name="user" />
-    Being helped by 16 app users
-  </a>
-);
-
-const SurveyStatus = () => (
-  <Card
-    image="/images/avatar/large/elliot.jpg"
-    header="Patrick"
-    meta="Client"
-    description="Survey Status."
-    extra={extra}
-  />
+const SurveyStatus = ({ resource }) => (
+  <Header as="h3">
+    {/* <Image
+      circular
+      src="https://react.semantic-ui.com/images/avatar/large/patrick.png"
+    /> */}
+    survey status
+    {console.log(resource)}
+    {/* <Header.Content>{`resource: ${resource.id} | wants: ${resource.wants_resource} | has: ${resource.has_resource}`}</Header.Content> */}
+  </Header>
 );
 
 export default SurveyStatus;
