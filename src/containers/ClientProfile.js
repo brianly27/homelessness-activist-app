@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { Container } from "semantic-ui-react";
+import { Container, Button } from "semantic-ui-react";
 import ClientCard from "../components/ClientCard";
 import SurveyForm from "../components/SurveyForm";
 import SurveyStatus from "../components/SurveyStatus";
-import ActionAdd from "./ActionAdd";
-import ActionStatus from "./ActionStatus";
-import ActionUpdate from "./ActionUpdate";
+import ActionUpdate from "../components/ActionUpdate";
 import ResourceDetails from "../components/ResourceDetails";
-import Action from "../components/Action";
+import ActionAdd from "../components/ActionAdd";
+import ActionShow from "../components/ActionShow";
+
 class ClientProfile extends Component {
   //if there are no c/r relationships, render survey form
   //if there are c/r relationships, render survey status or survey update
@@ -28,8 +28,8 @@ class ClientProfile extends Component {
     isSurveyStatus: false,
     isSurveyUpdate: false,
     isSurveyForm: false,
-    isActionStatus: false,
-    isActionForm: false,
+    isActionStatus: true,
+    isActionAdd: false,
     isActionUpdate: false
   };
 
@@ -56,6 +56,31 @@ class ClientProfile extends Component {
     // return resourceComponents;
   };
 
+  setActionAdd = () => {
+    console.log("render add action");
+    this.setState({
+      isActionStatus: false,
+      isActionAdd: true,
+      isActionUpdate: false
+    });
+  };
+
+  setActionStatus = () => {
+    console.log("setting action state");
+    this.setState({
+      isActionStatus: true,
+      isActionAdd: false,
+      isActionUpdate: false
+    });
+  };
+
+  setActionEdit = () => {
+    this.setState({
+      isActionStatus: false,
+      isActionAdd: false,
+      isActionUpdate: true
+    });
+  };
   renderActionAdd = (client, resourcesData) => {
     console.log(resourcesData); //[{…}, {…}, {…}, {…}]
     console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
@@ -70,19 +95,18 @@ class ClientProfile extends Component {
             name={resource.name}
             description={resource.description}
           />
-          {this.renderActions(resource.actions, client.id)}
+          {this.renderAddActions(resource.actions, client.id)}
         </>
       );
     });
     return actionAdd;
   };
 
-  renderActions = (actions, clientId) => {
+  renderAddActions = (actions, clientId) => {
     //post to c/a onClick, and render ActionShow
-    const { handleAddAction } = this.props;
     const actionComponents = actions.map(action => {
       return (
-        <Action
+        <ActionAdd
           clientId={clientId}
           actionId={action.id}
           name={action.name}
@@ -94,109 +118,163 @@ class ClientProfile extends Component {
           contactName={action.contact_name}
           contactEmail={action.contact_email}
           contactPhone={action.contact_phone}
-          handleAddAction={handleAddAction}
+          startDate={""}
+          completeDate={""}
+          status={""}
           setActionStatus={this.setActionStatus}
+          handleAddAction={this.props.handleAddAction}
         />
       );
     });
     return actionComponents;
   };
 
-  setActionStatus = () => {
-    console.log("setting action state");
-    this.setState({
-      isActionStatus: true,
-      isActionForm: false,
-      isActionUpdate: false
-    });
-  };
-  renderActionForm = () => {
-    // return SurveyStatus, pass props, change state
+  handleAddActionClick = () => {
+    this.setActionStatus();
+    this.props.handleAddAction();
   };
 
-  renderActionUpdate = () => {
-    // return SurveyStatus, pass props, change state
+  renderActionStatus = (client, resourcesData) => {
+    console.log(resourcesData); //[{…}, {…}, {…}, {…}]
+    console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
+    const actionAdd = client.clients_resources.map(clientsResource => {
+      const resource = resourcesData.find(resourceData => {
+        return resourceData.id === clientsResource.id;
+      });
+      console.log(resource.name);
+      return (
+        <>
+          <ResourceDetails
+            name={resource.name}
+            description={resource.description}
+          />
+          <Button onClick={() => this.setActionAdd()}>add action</Button>
+          {this.renderActionsStatus(resource.actions, client)}
+        </>
+      );
+    });
+    return actionAdd;
+  };
+  renderActionsStatus = (resourceActions, client) => {
+    let clientActions = [];
+    resourceActions.forEach(resourceAction => {
+      const clientActionMatches = client.clients_actions.filter(
+        clientAction => {
+          return clientAction.id === resourceAction.id;
+        }
+      );
+      clientActionMatches.forEach(clientAction => {
+        clientActions.push(clientAction);
+      });
+    });
+
+    const actionComponents = clientActions.map(clientAction => {
+      const matchingAction = resourceActions.find(resourceAction => {
+        return resourceAction.id === clientAction.id;
+      });
+      console.log(clientAction);
+      return (
+        <ActionShow
+          clientId={clientAction.client_id}
+          actionId={clientAction.action_id}
+          name={matchingAction.name}
+          form={matchingAction.form}
+          readme={matchingAction.readme}
+          submitAddress={matchingAction.submit_address}
+          description={matchingAction.description}
+          locationName={matchingAction.location_name}
+          contactName={matchingAction.contact_name}
+          contactEmail={matchingAction.contact_email}
+          contactPhone={matchingAction.contact_phone}
+          submitDate={clientAction.submit_date}
+          completeDate={clientAction.complete_date}
+          status={clientAction.status}
+          setActionEdit={this.setActionEdit}
+        />
+      );
+    });
+
+    return actionComponents;
   };
 
-  renderClients = () => {
-    const clientComponents = this.props.userData.clients.map(client => {
-      return "asdf";
-      // <NavLink to={`/clients/${client.id}`}>
-      //   <ClientListItem
-      //     id={client.id}
-      //     firstName={client.first_name}
-      //     lastName={client.last_name}
-      //     alias={client.last_name}
-      //     handleClick={this.props.navigateToClient}
-      //   />
-      // </NavLink>
-      // );
-      // }
-      return clientComponents;
+  renderActionUpdate = (client, resourcesData) => {
+    const actionAdd = client.clients_resources.map(clientsResource => {
+      const resource = resourcesData.find(resourceData => {
+        return resourceData.id === clientsResource.id;
+      });
+      console.log(resource.name);
+      return (
+        <>
+          <ResourceDetails
+            name={resource.name}
+            description={resource.description}
+          />
+          {this.renderActionsUpdate(resource.actions, client)}
+        </>
+      );
     });
+    return actionAdd;
+  };
+
+  renderActionsUpdate = (resourceActions, client) => {
+    const { handleUpdateAction } = this.props;
+    let clientActions = [];
+    resourceActions.forEach(resourceAction => {
+      const clientActionMatches = client.clients_actions.filter(
+        clientAction => {
+          return clientAction.id === resourceAction.id;
+        }
+      );
+      clientActionMatches.forEach(clientAction => {
+        clientActions.push(clientAction);
+      });
+    });
+
+    const actionComponents = clientActions.map(clientAction => {
+      const matchingAction = resourceActions.find(resourceAction => {
+        return resourceAction.id === clientAction.id;
+      });
+      return (
+        <ActionUpdate
+          clientActionId={clientAction.id}
+          name={matchingAction.name}
+          submitDate={clientAction.submit_date}
+          completeDate={clientAction.complete_date}
+          status={clientAction.status}
+          handleUpdateAction={handleUpdateAction}
+          setActionStatus={this.setActionStatus}
+        />
+      );
+    });
+
+    return actionComponents;
   };
 
   render() {
-    const { isActionStatus, isActionForm, isActionUpdate } = this.state;
+    const { isActionStatus, isActionAdd, isActionUpdate } = this.state;
     const { clients, resourcesData } = this.props;
 
     const client = clients ? this.findClient() : null;
 
     const clientResources = client ? client.client_resources : "";
-    const clientActions = client ? client.clients_actions : "";
     return (
       <>
         {client ? client.first_name : null}
         <ClientCard client={client} />
         <SurveyForm resources={clientResources} />
-        {/* async problem */}
         {client ? this.renderSurveyStatus() : null}
-        {client && resourcesData
+        {client && resourcesData && isActionAdd
           ? this.renderActionAdd(client, resourcesData)
           : null}
-        {/* maybe i will need to render action form and status inside a container */}
-        {/* <ActionAdd resources={clientResources} actions={clientActions} /> */}
-        {/* <ActionStatus resources={clientResources} actions={clientActions} /> */}
-        {/* <ActionUpdate /> */}
+        {client && resourcesData && isActionStatus
+          ? this.renderActionStatus(client, resourcesData)
+          : null}
+        {client && resourcesData && isActionUpdate
+          ? this.renderActionUpdate(client, resourcesData)
+          : null}
       </>
     );
   }
 }
 
 export default ClientProfile;
-
-// the create new client button is clicked
-// a create client form should be rendered
-
-// when the form is submitted, we send a post to the server at clients#create
-// *define accepted and required params; for now, server accepts anything to create a client and return its client_id
-// *create client with user_id as well
-
-// When a new client is created, the user will be routed to client's show page
-// // *for now, lets just fetch the entire db; change this in the future
-// #fetch resource and action data when client wants to add an action
-
-// how do i trigger fetch request in App? ask for props from App
-
-// submitting SurveyForm will update state in u/r
-// any resource_id in u/r will be rendered in ActionShow
-// in the beginning, ActionShow will render the resource name, empty list, and "add" button
-
-// the user can click the add button, it will render a description of the resource and Action components
-// Action displays a description and whether or not it has been recommended by others
-// this should render an ActionStatus component
-
-// ActionStatus displays current data from C/A and an edit button
-// when "edit" is clicked, ActionFrom is rendered
-// ActionForm displays a from to update start_date, completed_date, status
-
-// the components need to be created
-// this includes the forms: CreateClientForm, ActionForm
-// write post requests for each form
-
-// then write the components that will display data: ActionStatus, SurveyStatus, Action
-// write the methods that will map over the data and send props to the components
-//
-
-// the structure of the fetch request needs to be designed
-// the post requests need to be written

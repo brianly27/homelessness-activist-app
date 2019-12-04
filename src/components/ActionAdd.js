@@ -1,7 +1,7 @@
 import React from "react";
 import { List } from "semantic-ui-react";
 
-const Action = ({
+const ActionAdd = ({
   clientId,
   actionId,
   name,
@@ -13,6 +13,9 @@ const Action = ({
   contactName,
   contactEmail,
   contactPhone,
+  startDate,
+  completeDate,
+  status,
   setActionStatus,
   handleAddAction
 }) => (
@@ -66,7 +69,19 @@ const Action = ({
       <List.Icon name="wordpress forms" />
       <List.Content>readme: {readme}</List.Content>
     </List.Item>
+    <List.Item>
+      <List.Icon name="wordpress forms" />
+      <List.Content>Start Date: {startDate}</List.Content>
+    </List.Item>
+    <List.Item>
+      <List.Icon name="wordpress forms" />
+      <List.Content>Complete Date: {completeDate}</List.Content>
+    </List.Item>
+    <List.Item>
+      <List.Icon name="wordpress forms" />
+      <List.Content>Status: {status}</List.Content>
+    </List.Item>
   </List>
 );
 
-export default Action;
+export default ActionAdd;

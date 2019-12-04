@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Container } from "semantic-ui-react";
 import ResourceDetails from "../components/ResourceDetails";
-import Action from "../components/Action";
 
 class ActionStatus extends Component {
   renderResources = () => {
@@ -38,9 +37,6 @@ class ActionStatus extends Component {
       <Container>
         {resources ? this.renderResource() : null}
         <p>action status</p>
-        <ul>
-          <Action />
-        </ul>
       </Container>
     );
   }

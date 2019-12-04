@@ -69,7 +69,6 @@ class App extends Component {
   };
 
   handleAddAction = (actionId, clientId) => {
-    console.log("adding action before fetch");
     this.fetchClientAction(actionId, clientId).then(updatedClient => {
       this.setState(prevState => ({
         clients: prevState.clients.map(client =>
@@ -93,6 +92,30 @@ class App extends Component {
     }).then(resp => resp.json());
   };
 
+  handleUpdateAction = (clientActionId, body) => {
+    console.log(body);
+    this.fetchClientActionUpdate(clientActionId, body).then(updatedClient => {
+      this.setState(prevState => ({
+        clients: prevState.clients.map(client =>
+          client.id === updatedClient.id ? updatedClient : client
+        ) //check if this is right
+      }));
+    });
+  };
+
+  fetchClientActionUpdate = (clientActionId, body) => {
+    return fetch(`http://localhost:3000/clients_actions/${clientActionId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        clientActionId,
+        body
+      })
+    }).then(resp => resp.json());
+  };
   //also retreive actions related to each resource
   //
 
@@ -102,7 +125,8 @@ class App extends Component {
       navigateToClient,
       addNewClientToState,
       fetchClients,
-      handleAddAction
+      handleAddAction,
+      handleUpdateAction
     } = this;
     return (
       <Router>
@@ -126,6 +150,7 @@ class App extends Component {
               fetchClients={fetchClients}
               resourcesData={resourcesData}
               handleAddAction={handleAddAction}
+              handleUpdateAction={handleUpdateAction}
             />
           )}
         />
