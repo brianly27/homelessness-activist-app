@@ -13,12 +13,13 @@ class App extends Component {
     userId: 1,
     userData: {},
     clients: [],
-    resources: []
+    resourcesData: null
   };
 
   componentDidMount() {
     this.fetchClients();
     this.fetchUser();
+    this.fetchResources();
   }
 
   fetchClients = () => {
@@ -51,51 +52,58 @@ class App extends Component {
 
   addNewClientToState = client => {
     console.log("before setstate", client);
-    this.setState(
-      {
-        clients: [...this.state.clients, client] //check if this is right
-      },
-      console.log("after post", this.state.clients)
-    );
+    this.setState({
+      clients: [...this.state.clients, client] //check if this is right
+    });
   };
 
   //propbably have to fetch resrouce name and description based on array of resource ids | find unique ids
   fetchResources = () => {
     fetch("http://localhost:3000/resources")
       .then(res => res.json())
-      .then(resources => {
+      .then(resourcesData => {
         this.setState({
-          resources
+          resourcesData
         });
       });
   };
 
-  // fetchClientResources = url => {
-  //   return fetch(url, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       identification,
-  //       address,
-  //       foodStamps,
-  //       busPass,
-  //       cellphone,
-  //       healthCare,
-  //       employmentServices,
-  //       notes
-  //     })
-  //   }).then(resp => resp.json());
-  // };
+  handleAddAction = (actionId, clientId) => {
+    console.log("adding action before fetch");
+    this.fetchClientAction(actionId, clientId).then(updatedClient => {
+      this.setState(prevState => ({
+        clients: prevState.clients.map(client =>
+          client.id === updatedClient.id ? updatedClient : client
+        ) //check if this is right
+      }));
+    });
+  };
+
+  fetchClientAction = (actionId, clientId) => {
+    return fetch("http://localhost:3000/clients_actions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        actionId,
+        clientId
+      })
+    }).then(resp => resp.json());
+  };
 
   //also retreive actions related to each resource
   //
 
   render() {
-    const { clients, userData } = this.state;
-    const { navigateToClient, addNewClientToState } = this;
+    const { clients, userData, resourcesData } = this.state;
+    const {
+      navigateToClient,
+      addNewClientToState,
+      fetchClients,
+      handleAddAction
+    } = this;
     return (
       <Router>
         <NavBar />
@@ -111,7 +119,15 @@ class App extends Component {
         />
         <Route
           path="/clients/:id"
-          render={props => <ClientProfile {...props} clients={clients} />}
+          render={props => (
+            <ClientProfile
+              {...props}
+              clients={clients}
+              fetchClients={fetchClients}
+              resourcesData={resourcesData}
+              handleAddAction={handleAddAction}
+            />
+          )}
         />
         <Route
           path="/user"

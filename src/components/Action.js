@@ -1,32 +1,70 @@
 import React from "react";
 import { List } from "semantic-ui-react";
 
-const Action = () => (
-  <List>
+const Action = ({
+  clientId,
+  actionId,
+  name,
+  form,
+  readme,
+  submitAddress,
+  description,
+  locationName,
+  contactName,
+  contactEmail,
+  contactPhone,
+  setActionStatus,
+  handleAddAction
+}) => (
+  <List
+    onClick={() => {
+      setActionStatus();
+      handleAddAction(actionId, clientId);
+    }}
+  >
     <List.Item>
       <List.Icon name="compass" />
-      <List.Content>Action Name</List.Content>
+      <List.Content>{name}</List.Content>
     </List.Item>
     <List.Item>
       <List.Icon name="linkify" />
       <List.Content>
-        <a href="http://www.semantic-ui.com">Link to form</a>
+        <a href={form}>Link to form</a>
       </List.Content>
+    </List.Item>
+    <List.Item>
+      <List.Icon name="wordpress forms" />
+      <List.Content>Description: {description}</List.Content>
     </List.Item>
     <List.Item>
       <List.Icon name="marker" />
-      <List.Content>1411 4th Ave 13th Floor, Seattle, WA 98101</List.Content>
+      <List.Content>Submit at {submitAddress} </List.Content>
+    </List.Item>
+    <List.Item>
+      <List.Icon name="marker" />
+      <List.Content>Location Name: {locationName} </List.Content>
     </List.Item>
     <List.Item>
       <List.Icon name="users" />
-      <List.Content>contact name: Jack</List.Content>
+      <List.Content>Contact: {contactName}</List.Content>
     </List.Item>
-
+    <List.Item>
+      <List.Icon name="users" />
+      <List.Content>Contact Email: {contactEmail}</List.Content>
+    </List.Item>
+    <List.Item>
+      <List.Icon name="users" />
+      <List.Content>Contact Phone: {contactPhone}</List.Content>
+    </List.Item>
     <List.Item>
       <List.Icon name="mail" />
       <List.Content>
-        <a href="mailto:jack@semantic-ui.com">jack@semantic-ui.com</a>
+        <a href={`mailto:${contactEmail}`}>Contact Email: {contactEmail}</a>
       </List.Content>
+    </List.Item>
+    <List.Item>
+      <List.Icon name="wordpress forms" />
+      <List.Content>readme: {readme}</List.Content>
     </List.Item>
   </List>
 );

@@ -33,8 +33,11 @@ class ActionStatus extends Component {
     //
   };
   render() {
+    const resources = this.props.resources ? this.props.resources : "";
     return (
       <Container>
+        {resources ? this.renderResource() : null}
+        <p>action status</p>
         <ul>
           <Action />
         </ul>

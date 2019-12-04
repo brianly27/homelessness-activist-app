@@ -6,7 +6,8 @@ import SurveyStatus from "../components/SurveyStatus";
 import ActionAdd from "./ActionAdd";
 import ActionStatus from "./ActionStatus";
 import ActionUpdate from "./ActionUpdate";
-
+import ResourceDetails from "../components/ResourceDetails";
+import Action from "../components/Action";
 class ClientProfile extends Component {
   //if there are no c/r relationships, render survey form
   //if there are c/r relationships, render survey status or survey update
@@ -14,12 +15,17 @@ class ClientProfile extends Component {
   findClient = () => {
     const href = this.props.location.pathname;
     const id = href.split("/").pop(-1);
-    const client = this.props.clients.find(client => client.id === id);
+    const client = this.props.clients.find(
+      client => client.id === parseInt(id)
+    );
     return client;
   };
 
+  componentDidMount() {
+    // const client = this.findClient();
+  }
   state = {
-    isSurveyStatus: true,
+    isSurveyStatus: false,
     isSurveyUpdate: false,
     isSurveyForm: false,
     isActionStatus: false,
@@ -49,27 +55,61 @@ class ClientProfile extends Component {
     // });
     // return resourceComponents;
   };
-  // renderClients = () => {
-  //   const clientComponents = this.props.userData.clients.map(client => {
-  //     return (
-  //       <NavLink to={`/clients/${client.id}`}>
-  //         <ClientListItem
-  //           id={client.id}
-  //           firstName={client.first_name}
-  //           lastName={client.last_name}
-  //           alias={client.last_name}
-  //           handleClick={this.props.navigateToClient}
-  //         />
-  //       </NavLink>
-  //     );
-  //   });
-  //   return clientComponents;
-  // };
 
-  renderActionStatus = () => {
-    // return SurveyStatus, pass props, change state
+  renderActionAdd = (client, resourcesData) => {
+    console.log(resourcesData); //[{…}, {…}, {…}, {…}]
+    console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
+    const actionAdd = client.clients_resources.map(clientsResource => {
+      const resource = resourcesData.find(resourceData => {
+        return resourceData.id === clientsResource.id;
+      });
+      console.log(resource.name);
+      return (
+        <>
+          <ResourceDetails
+            name={resource.name}
+            description={resource.description}
+          />
+          {this.renderActions(resource.actions, client.id)}
+        </>
+      );
+    });
+    return actionAdd;
   };
 
+  renderActions = (actions, clientId) => {
+    //post to c/a onClick, and render ActionShow
+    const { handleAddAction } = this.props;
+    const actionComponents = actions.map(action => {
+      return (
+        <Action
+          clientId={clientId}
+          actionId={action.id}
+          name={action.name}
+          form={action.form}
+          readme={action.readme}
+          submitAddress={action.submit_address}
+          description={action.description}
+          locationName={action.location_name}
+          contactName={action.contact_name}
+          contactEmail={action.contact_email}
+          contactPhone={action.contact_phone}
+          handleAddAction={handleAddAction}
+          setActionStatus={this.setActionStatus}
+        />
+      );
+    });
+    return actionComponents;
+  };
+
+  setActionStatus = () => {
+    console.log("setting action state");
+    this.setState({
+      isActionStatus: true,
+      isActionForm: false,
+      isActionUpdate: false
+    });
+  };
   renderActionForm = () => {
     // return SurveyStatus, pass props, change state
   };
@@ -78,21 +118,46 @@ class ClientProfile extends Component {
     // return SurveyStatus, pass props, change state
   };
 
+  renderClients = () => {
+    const clientComponents = this.props.userData.clients.map(client => {
+      return "asdf";
+      // <NavLink to={`/clients/${client.id}`}>
+      //   <ClientListItem
+      //     id={client.id}
+      //     firstName={client.first_name}
+      //     lastName={client.last_name}
+      //     alias={client.last_name}
+      //     handleClick={this.props.navigateToClient}
+      //   />
+      // </NavLink>
+      // );
+      // }
+      return clientComponents;
+    });
+  };
+
   render() {
-    const { client } = this.props;
+    const { isActionStatus, isActionForm, isActionUpdate } = this.state;
+    const { clients, resourcesData } = this.props;
+
+    const client = clients ? this.findClient() : null;
 
     const clientResources = client ? client.client_resources : "";
     const clientActions = client ? client.clients_actions : "";
     return (
       <>
+        {client ? client.first_name : null}
         <ClientCard client={client} />
         <SurveyForm resources={clientResources} />
         {/* async problem */}
         {client ? this.renderSurveyStatus() : null}
+        {client && resourcesData
+          ? this.renderActionAdd(client, resourcesData)
+          : null}
         {/* maybe i will need to render action form and status inside a container */}
-        <ActionAdd resources={clientResources} actions={clientActions} />
-        <ActionStatus resources={clientResources} actions={clientActions} />
-        <ActionUpdate />
+        {/* <ActionAdd resources={clientResources} actions={clientActions} /> */}
+        {/* <ActionStatus resources={clientResources} actions={clientActions} /> */}
+        {/* <ActionUpdate /> */}
       </>
     );
   }
