@@ -3,6 +3,7 @@ import { Container, Button } from "semantic-ui-react";
 import ClientCard from "../components/ClientCard";
 import SurveyForm from "../components/SurveyForm";
 import SurveyStatus from "../components/SurveyStatus";
+import SurveyAddResource from "../components/SurveyAddResource";
 import ActionUpdate from "../components/ActionUpdate";
 import ResourceDetails from "../components/ResourceDetails";
 import ActionAdd from "../components/ActionAdd";
@@ -21,43 +22,76 @@ class ClientProfile extends Component {
     return client;
   };
 
-  componentDidMount() {
-    // const client = this.findClient();
-  }
   state = {
-    isSurveyStatus: false,
-    isSurveyUpdate: false,
+    isSurveyStatus: true,
     isSurveyForm: false,
     isActionStatus: true,
     isActionAdd: false,
     isActionUpdate: false
   };
 
-  renderSurveyForm = () => {
-    const { client } = this.props;
-    const clientResources = client ? client.client_resources : "";
-    return <SurveyForm resources={clientResources} />;
+  renderSurveyForm = (client, resourcesData) => {
+    const surveyComponents = resourcesData.map(resource => {
+      return (
+        <SurveyAddResource
+          clientId={client.id}
+          resourceId={resource.id}
+          name={resource.name}
+          description={resource.description}
+          handleAddResource={this.props.handleAddResource}
+          setSurveyStatus={this.setSurveyStatus}
+        />
+      );
+    });
+    return surveyComponents;
   };
 
-  renderSurveyUpdate = () => {
-    // return SurveyUpdate, pass props, change state
-  };
-
-  renderSurveyStatus = () => {
+  renderSurveyStatus = (client, resourcesData) => {
     // return SurveyStatus, pass props, change state
-    const { client } = this.props;
-    const clientResources = client ? client.client_resources : "";
-    console.log(clientResources);
-    //async is causing errors
+    let clientResources = [];
+    client.clients_resources.forEach(clientsResource => {
+      const matchingResource = resourcesData.filter(resource => {
+        return resource.id === clientsResource.id;
+      });
+      matchingResource.forEach(resource => {
+        clientResources.push(resource);
+      });
+    });
+    const surveyComponents = clientResources.map(resource => {
+      return (
+        <SurveyStatus
+          name={resource.name}
+          // description={resource.description}
+          // handleAddResource={this.props.handleAddResource}
+          // setSurveyStatus={this.setSurveyStatus}
+        />
+      );
+    });
+    return (
+      <>
+        {surveyComponents}
+        <Button onClick={this.setSurveyForm}>
+          Add a resource to list of needs
+        </Button>
+      </>
+    );
+  };
 
-    // const resourceComponents = clientResources.map(resource => {
-    //   return <SurveyStatus resource={resource} />;
-    // });
-    // return resourceComponents;
+  setSurveyForm = () => {
+    this.setState({
+      isSurveyStatus: false,
+      isSurveyForm: true
+    });
+  };
+
+  setSurveyStatus = () => {
+    this.setState({
+      isSurveyStatus: true,
+      isSurveyForm: false
+    });
   };
 
   setActionAdd = () => {
-    console.log("render add action");
     this.setState({
       isActionStatus: false,
       isActionAdd: true,
@@ -66,7 +100,6 @@ class ClientProfile extends Component {
   };
 
   setActionStatus = () => {
-    console.log("setting action state");
     this.setState({
       isActionStatus: true,
       isActionAdd: false,
@@ -139,10 +172,10 @@ class ClientProfile extends Component {
     console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
     const actionAdd = client.clients_resources.map(clientsResource => {
       const resource = resourcesData.find(resourceData => {
-        return resourceData.id === clientsResource.id;
+        return resourceData.id === clientsResource.resource_id;
       });
-      console.log(resource.name);
-      return (
+      console.log(resource);
+      return resource ? (
         <>
           <ResourceDetails
             name={resource.name}
@@ -151,7 +184,7 @@ class ClientProfile extends Component {
           <Button onClick={() => this.setActionAdd()}>add action</Button>
           {this.renderActionsStatus(resource.actions, client)}
         </>
-      );
+      ) : null;
     });
     return actionAdd;
   };
@@ -251,18 +284,26 @@ class ClientProfile extends Component {
   };
 
   render() {
-    const { isActionStatus, isActionAdd, isActionUpdate } = this.state;
+    const {
+      isSurveyForm,
+      isSurveyStatus,
+      isActionStatus,
+      isActionAdd,
+      isActionUpdate
+    } = this.state;
     const { clients, resourcesData } = this.props;
-
     const client = clients ? this.findClient() : null;
-
-    const clientResources = client ? client.client_resources : "";
     return (
       <>
         {client ? client.first_name : null}
+
         <ClientCard client={client} />
-        <SurveyForm resources={clientResources} />
-        {client ? this.renderSurveyStatus() : null}
+        {client && resourcesData && isSurveyForm
+          ? this.renderSurveyForm(client, resourcesData)
+          : null}
+        {client && resourcesData && isSurveyStatus
+          ? this.renderSurveyStatus(client, resourcesData)
+          : null}
         {client && resourcesData && isActionAdd
           ? this.renderActionAdd(client, resourcesData)
           : null}

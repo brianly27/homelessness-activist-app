@@ -68,6 +68,31 @@ class App extends Component {
       });
   };
 
+  handleAddResource = (clientId, resourceId) => {
+    this.fetchClientResource(clientId, resourceId).then(updatedClient => {
+      console.log(updatedClient);
+      this.setState(prevState => ({
+        clients: prevState.clients.map(client =>
+          client.id === updatedClient.id ? updatedClient : client
+        ) //check if this is right
+      }));
+    });
+  };
+
+  fetchClientResource = (clientId, resourceId) => {
+    return fetch("http://localhost:3000/clients_resources", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        clientId,
+        resourceId
+      })
+    }).then(resp => resp.json());
+  };
+
   handleAddAction = (actionId, clientId) => {
     this.fetchClientAction(actionId, clientId).then(updatedClient => {
       this.setState(prevState => ({
@@ -126,7 +151,8 @@ class App extends Component {
       addNewClientToState,
       fetchClients,
       handleAddAction,
-      handleUpdateAction
+      handleUpdateAction,
+      handleAddResource
     } = this;
     return (
       <Router>
@@ -151,6 +177,7 @@ class App extends Component {
               resourcesData={resourcesData}
               handleAddAction={handleAddAction}
               handleUpdateAction={handleUpdateAction}
+              handleAddResource={handleAddResource}
             />
           )}
         />
