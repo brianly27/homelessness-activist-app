@@ -30,53 +30,6 @@ class ClientProfile extends Component {
     isActionUpdate: false
   };
 
-  renderSurveyForm = (client, resourcesData) => {
-    const surveyComponents = resourcesData.map(resource => {
-      return (
-        <SurveyAddResource
-          clientId={client.id}
-          resourceId={resource.id}
-          name={resource.name}
-          description={resource.description}
-          handleAddResource={this.props.handleAddResource}
-          setSurveyStatus={this.setSurveyStatus}
-        />
-      );
-    });
-    return surveyComponents;
-  };
-
-  renderSurveyStatus = (client, resourcesData) => {
-    // return SurveyStatus, pass props, change state
-    let clientResources = [];
-    client.clients_resources.forEach(clientsResource => {
-      const matchingResource = resourcesData.filter(resource => {
-        return resource.id === clientsResource.id;
-      });
-      matchingResource.forEach(resource => {
-        clientResources.push(resource);
-      });
-    });
-    const surveyComponents = clientResources.map(resource => {
-      return (
-        <SurveyStatus
-          name={resource.name}
-          // description={resource.description}
-          // handleAddResource={this.props.handleAddResource}
-          // setSurveyStatus={this.setSurveyStatus}
-        />
-      );
-    });
-    return (
-      <>
-        {surveyComponents}
-        <Button onClick={this.setSurveyForm}>
-          Add a resource to list of needs
-        </Button>
-      </>
-    );
-  };
-
   setSurveyForm = () => {
     this.setState({
       isSurveyStatus: false,
@@ -114,14 +67,65 @@ class ClientProfile extends Component {
       isActionUpdate: true
     });
   };
+
+  //survey form
+  renderSurveyEdit = (client, resourcesData) => {
+    const surveyComponents = resourcesData.map(resource => {
+      return (
+        <SurveyAddResource
+          clientId={client.id}
+          resourceId={resource.id}
+          name={resource.name}
+          description={resource.description}
+          handleAddResource={this.props.handleAddResource}
+          setSurveyStatus={this.setSurveyStatus}
+        />
+      );
+    });
+    return surveyComponents;
+  };
+
+  renderSurveyDisplay = (client, resourcesData) => {
+    // return SurveyStatus, pass props, change state
+    console.log(client);
+    console.log(resourcesData);
+    let clientResources = [];
+    client.clients_resources.forEach(clientsResource => {
+      const matchingResource = resourcesData.filter(resource => {
+        return resource.id === clientsResource.id;
+      });
+      matchingResource.forEach(resource => {
+        clientResources.push(resource);
+      });
+    });
+    const surveyComponents = clientResources.map(resource => {
+      return (
+        <SurveyStatus
+          name={resource.name}
+          // description={resource.description}
+          // handleAddResource={this.props.handleAddResource}
+          // setSurveyStatus={this.setSurveyStatus}
+        />
+      );
+    });
+    return (
+      <>
+        {surveyComponents}
+        <Button onClick={this.setSurveyForm}>
+          Add a resource to list of needs
+        </Button>
+      </>
+    );
+  };
+
   renderActionAdd = (client, resourcesData) => {
-    console.log(resourcesData); //[{…}, {…}, {…}, {…}]
-    console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
+    // console.log(resourcesData); //[{…}, {…}, {…}, {…}]
+    // console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
     const actionAdd = client.clients_resources.map(clientsResource => {
       const resource = resourcesData.find(resourceData => {
         return resourceData.id === clientsResource.resource_id;
       });
-      console.log(resource.name);
+      // console.log(resource.name);
       return (
         <>
           <ResourceDetails
@@ -168,13 +172,13 @@ class ClientProfile extends Component {
   };
 
   renderActionStatus = (client, resourcesData) => {
-    console.log(resourcesData); //[{…}, {…}, {…}, {…}]
-    console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
+    // console.log(resourcesData); //[{…}, {…}, {…}, {…}]
+    // console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
     const actionAdd = client.clients_resources.map(clientsResource => {
       const resource = resourcesData.find(resourceData => {
         return resourceData.id === clientsResource.resource_id;
       });
-      console.log(resource);
+      // console.log(resource);
       return resource ? (
         <>
           <ResourceDetails
@@ -205,7 +209,7 @@ class ClientProfile extends Component {
       const matchingAction = resourceActions.find(resourceAction => {
         return resourceAction.id === clientAction.id;
       });
-      console.log(clientAction);
+      // console.log(clientAction);
       return (
         <Segment attached>
           <ActionShow
@@ -237,7 +241,7 @@ class ClientProfile extends Component {
       const resource = resourcesData.find(resourceData => {
         return resourceData.id === clientsResource.resource_id;
       });
-      console.log(resource.name);
+      // console.log(resource.name);
       return (
         <>
           <br></br>
@@ -307,10 +311,10 @@ class ClientProfile extends Component {
           </Grid.Column>
           <Grid.Column>
             {client && resourcesData && isSurveyForm
-              ? this.renderSurveyForm(client, resourcesData)
+              ? this.renderSurveyEdit(client, resourcesData)
               : null}
             {client && resourcesData && isSurveyStatus
-              ? this.renderSurveyStatus(client, resourcesData)
+              ? this.renderSurveyDisplay(client, resourcesData)
               : null}
           </Grid.Column>
         </Grid.Row>
