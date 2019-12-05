@@ -10,7 +10,7 @@ const SurveyAddResource = ({
   setSurveyStatus
 }) => (
   <Container>
-    <Header as="h2">{name}</Header>
+    <Header as="h3">{name}</Header>
     <p>{description}</p>
     <Button
       onClick={() => {

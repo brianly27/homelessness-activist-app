@@ -27,7 +27,7 @@ const ActionAdd = ({
   >
     <List.Item>
       <List.Icon name="compass" />
-      <List.Content>{name}</List.Content>
+      <List.Content as="h4">{name}</List.Content>
     </List.Item>
     <List.Item>
       <List.Icon name="linkify" />

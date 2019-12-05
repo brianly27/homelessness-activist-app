@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "semantic-ui-react";
+import { Table, Button } from "semantic-ui-react";
 
 const ClientsTable = () => (
   <Table striped>
@@ -17,7 +17,9 @@ const ClientsTable = () => (
         <Table.Cell>John Lilki</Table.Cell>
         <Table.Cell>September 14, 2013</Table.Cell>
         <Table.Cell>jhlilk22@yahoo.com</Table.Cell>
-        <Table.Cell>No</Table.Cell>
+        <Table.Cell>
+          <Button>+</Button>
+        </Table.Cell>
       </Table.Row>
       <Table.Row>
         <Table.Cell>Jamie Harington</Table.Cell>

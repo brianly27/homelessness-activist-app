@@ -26,7 +26,8 @@ class CreateClient extends Component {
     console.log("before post");
     this.postClient("http://localhost:3000/clients").then(client => {
       this.props.addNewClientToState(client);
-      this.props.history.push(`/clients/${client.clientId}`);
+      this.props.fetchUser();
+      this.props.history.push(`/clients/${client.id}`);
     });
   };
 
@@ -41,6 +42,8 @@ class CreateClient extends Component {
       income
     } = this.state;
 
+    const { userId } = this.props;
+
     return fetch(url, {
       method: "POST",
       headers: {
@@ -48,6 +51,7 @@ class CreateClient extends Component {
         Accept: "application/json"
       },
       body: JSON.stringify({
+        userId,
         firstName,
         lastName,
         alias,
@@ -125,13 +129,13 @@ class CreateClient extends Component {
           <label>Location</label>
           <input
             placeholder="General Location"
-            name="locaiton"
+            name="location"
             value={location}
             onChange={this.handleChange}
           />
         </Form.Field>
         <Form.Field>
-          <label>Last Name</label>
+          <label>Income</label>
           <input
             placeholder="Income"
             name="income"

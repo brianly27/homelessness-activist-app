@@ -24,7 +24,7 @@ class ActionUpdate extends Component {
     const { submitDate, completeDate, status } = this.state;
     return (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Field>
+        <Form.Field as="h4">
           <label>{this.props.name}</label>
         </Form.Field>
         <Form.Field>

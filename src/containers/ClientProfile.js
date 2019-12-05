@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Button, Grid, Segment } from "semantic-ui-react";
+import { Container, Button, Grid, Segment, Header } from "semantic-ui-react";
 import ClientCard from "../components/ClientCard";
 import SurveyForm from "../components/SurveyForm";
 import SurveyStatus from "../components/SurveyStatus";
@@ -82,13 +82,19 @@ class ClientProfile extends Component {
         />
       );
     });
-    return surveyComponents;
+    return (
+      <>
+        <Header as="h2">
+          Add to {client.first_name.upper}'s list of needs
+        </Header>
+        {surveyComponents}
+        <Button onClick={this.setSurveyStatus}>Back</Button>
+      </>
+    );
   };
 
   renderSurveyDisplay = (client, resourcesData) => {
     // return SurveyStatus, pass props, change state
-    console.log(client);
-    console.log(resourcesData);
 
     const clientResources = client.clients_resources.map(clientResource => {
       const matchingResource = resourcesData.find(resource => {
@@ -108,39 +114,13 @@ class ClientProfile extends Component {
     });
     return (
       <>
+        <Header as="h2">{client.first_name} needs:</Header>
         {surveyComponents}
         <Button onClick={this.setSurveyForm}>
           Add a resource to list of needs
         </Button>
       </>
     );
-    // let clientResources = [];
-    // client.clients_resources.forEach(clientsResource => {
-    //   const matchingResource = resourcesData.filter(resource => {
-    //     return resource.id === clientsResource.id;
-    //   });
-    //   matchingResource.forEach(resource => {
-    //     clientResources.push(resource);
-    //   });
-    // });
-    // const surveyComponents = clientResources.map(resource => {
-    //   return (
-    //     <SurveyStatus
-    //       name={resource.name}
-    //       // description={resource.description}
-    //       // handleAddResource={this.props.handleAddResource}
-    //       // setSurveyStatus={this.setSurveyStatus}
-    //     />
-    //   );
-    // });
-    // return (
-    //   <>
-    //     {surveyComponents}
-    //     <Button onClick={this.setSurveyForm}>
-    //       Add a resource to list of needs
-    //     </Button>
-    //   </>
-    // );
   };
 
   renderActionAdd = (client, resourcesData) => {
@@ -196,6 +176,7 @@ class ClientProfile extends Component {
     this.props.handleAddAction();
   };
 
+  //render Actions this user is taking
   renderActionStatus = (client, resourcesData) => {
     // console.log(resourcesData); //[{…}, {…}, {…}, {…}]
     // console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
@@ -206,23 +187,30 @@ class ClientProfile extends Component {
       // console.log(resource);
       return resource ? (
         <>
+          <br></br>
+          <br></br>
+          <br></br>
           <ResourceDetails
             name={resource.name}
             description={resource.description}
           />
-          <Button onClick={() => this.setActionAdd()}>add action</Button>
-          {this.renderActionsStatus(resource.actions, client)}
+          <Button onClick={() => this.setActionAdd()}>
+            Add an action for {resource.name}
+          </Button>
+          {this.renderActionsStatus(client, resource.actions)}
         </>
       ) : null;
     });
     return actionAdd;
   };
-  renderActionsStatus = (resourceActions, client) => {
+  renderActionsStatus = (client, resourceActions) => {
+    console.log(client);
+    console.log(resourceActions);
     let clientActions = [];
     resourceActions.forEach(resourceAction => {
       const clientActionMatches = client.clients_actions.filter(
         clientAction => {
-          return clientAction.id === resourceAction.id;
+          return clientAction.action_id === resourceAction.id;
         }
       );
       clientActionMatches.forEach(clientAction => {
@@ -232,11 +220,11 @@ class ClientProfile extends Component {
 
     const actionComponents = clientActions.map(clientAction => {
       const matchingAction = resourceActions.find(resourceAction => {
-        return resourceAction.id === clientAction.id;
+        return resourceAction.id === clientAction.action_id;
       });
       // console.log(clientAction);
       return (
-        <Segment attached>
+        <Segment>
           <ActionShow
             clientId={clientAction.client_id}
             actionId={clientAction.action_id}
@@ -271,6 +259,7 @@ class ClientProfile extends Component {
         <>
           <br></br>
           <br></br>
+          <br></br>
           <ResourceDetails
             name={resource.name}
             description={resource.description}
@@ -288,7 +277,7 @@ class ClientProfile extends Component {
     resourceActions.forEach(resourceAction => {
       const clientActionMatches = client.clients_actions.filter(
         clientAction => {
-          return clientAction.id === resourceAction.id;
+          return clientAction.action_id === resourceAction.id;
         }
       );
       clientActionMatches.forEach(clientAction => {
@@ -298,7 +287,7 @@ class ClientProfile extends Component {
 
     const actionComponents = clientActions.map(clientAction => {
       const matchingAction = resourceActions.find(resourceAction => {
-        return resourceAction.id === clientAction.id;
+        return resourceAction.id === clientAction.action_id;
       });
       return (
         <Segment>

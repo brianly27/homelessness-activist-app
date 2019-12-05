@@ -5,7 +5,7 @@ import "./App.css";
 import NavBar from "./containers/NavBar";
 import UserProfile from "./containers/UserProfile";
 import ClientProfile from "./containers/ClientProfile";
-import ClientsTable from "./containers/ClientsContainer";
+import ClientsTable from "./containers/ClientsTable";
 import CreateClient from "./containers/CreateClient";
 
 class App extends Component {
@@ -145,14 +145,15 @@ class App extends Component {
   //
 
   render() {
-    const { clients, userData, resourcesData } = this.state;
+    const { userId, clients, userData, resourcesData } = this.state;
     const {
       navigateToClient,
       addNewClientToState,
       fetchClients,
       handleAddAction,
       handleUpdateAction,
-      handleAddResource
+      handleAddResource,
+      fetchUser
     } = this;
     return (
       <Router>
@@ -202,8 +203,10 @@ class App extends Component {
               render={props => (
                 <CreateClient
                   {...props}
+                  userId={userId}
                   addNewClientToState={addNewClientToState}
                   navigateToClient={navigateToClient}
+                  fetchUser={fetchUser}
                 />
               )}
             />
