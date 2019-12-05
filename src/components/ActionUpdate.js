@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, Container } from "semantic-ui-react";
 
 class ActionUpdate extends Component {
   state = {
@@ -30,7 +30,7 @@ class ActionUpdate extends Component {
         <Form.Field>
           <label>Submit Date</label>
           <input
-            placeholder="Submit Date"
+            placeholder={this.props.submitDate}
             name="submitDate"
             value={submitDate}
             defaultValue={this.props.submitDate}
@@ -40,7 +40,7 @@ class ActionUpdate extends Component {
         <Form.Field>
           <label>Complete Date</label>
           <input
-            placeholder="Complete Date"
+            placeholder={this.props.completeDate}
             name="completeDate"
             value={completeDate}
             defaultValue={this.props.completeDate}
@@ -50,7 +50,7 @@ class ActionUpdate extends Component {
         <Form.Field>
           <label>Status</label>
           <input
-            placeholder="Status"
+            placeholder={this.props.status}
             name="status"
             value={status}
             defaultValue={this.props.status}

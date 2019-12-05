@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container } from "semantic-ui-react";
+import { Container, Grid } from "semantic-ui-react";
 import UserCard from "../components/UserCard";
 import ClientsList from "./ClientsList";
 import { NavLink } from "react-router-dom";
@@ -33,20 +33,26 @@ class UserProfile extends Component {
     const cellphone = user ? user.cellphone : "";
     const numberOfClients = clients ? clients.length : "";
     return (
-      <Container>
-        <UserCard
-          firstName={firstName}
-          lastName={lastName}
-          email={email}
-          cellphone={cellphone}
-          numberOfClients={numberOfClients}
-        />
-        {clients ? this.renderClients() : null}
-        {/* <ClientsList
+      <Grid>
+        <Grid.Row columns={2}>
+          <Grid.Column>
+            <UserCard
+              firstName={firstName}
+              lastName={lastName}
+              email={email}
+              cellphone={cellphone}
+              numberOfClients={numberOfClients}
+            />
+          </Grid.Column>
+          <Grid.Column>
+            {clients ? this.renderClients() : null}
+            {/* <ClientsList
           clients={clientsList}
           navigateToClient={navigateToClient}
         /> */}
-      </Container>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     );
   }
 }

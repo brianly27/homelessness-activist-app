@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
-
+import { Grid } from "semantic-ui-react";
 import "./App.css";
 import NavBar from "./containers/NavBar";
 import UserProfile from "./containers/UserProfile";
@@ -156,53 +156,59 @@ class App extends Component {
     } = this;
     return (
       <Router>
-        <NavBar />
-        <Route
-          path="/all_clients"
-          render={props => (
-            <ClientsTable
-              {...props}
-              clients={clients}
-              navigateToClient={navigateToClient}
+        <Grid divided="vertically">
+          <Grid.Row>
+            <NavBar />
+          </Grid.Row>
+
+          <Grid.Row centered>
+            <Route
+              path="/all_clients"
+              render={props => (
+                <ClientsTable
+                  {...props}
+                  clients={clients}
+                  navigateToClient={navigateToClient}
+                />
+              )}
             />
-          )}
-        />
-        <Route
-          path="/clients/:id"
-          render={props => (
-            <ClientProfile
-              {...props}
-              clients={clients}
-              fetchClients={fetchClients}
-              resourcesData={resourcesData}
-              handleAddAction={handleAddAction}
-              handleUpdateAction={handleUpdateAction}
-              handleAddResource={handleAddResource}
+            <Route
+              path="/clients/:id"
+              render={props => (
+                <ClientProfile
+                  {...props}
+                  clients={clients}
+                  fetchClients={fetchClients}
+                  resourcesData={resourcesData}
+                  handleAddAction={handleAddAction}
+                  handleUpdateAction={handleUpdateAction}
+                  handleAddResource={handleAddResource}
+                />
+              )}
             />
-          )}
-        />
-        <Route
-          path="/user"
-          render={props => (
-            <UserProfile
-              {...props}
-              navigateToClient={navigateToClient}
-              userData={userData}
+            <Route
+              path="/user"
+              render={props => (
+                <UserProfile
+                  {...props}
+                  navigateToClient={navigateToClient}
+                  userData={userData}
+                />
+              )}
             />
-          )}
-        />
-        {/* create client */}
-        <Route
-          path="/create_client"
-          render={props => (
-            <CreateClient
-              {...props}
-              addNewClientToState={addNewClientToState}
-              navigateToClient={navigateToClient}
+            {/* create client */}
+            <Route
+              path="/create_client"
+              render={props => (
+                <CreateClient
+                  {...props}
+                  addNewClientToState={addNewClientToState}
+                  navigateToClient={navigateToClient}
+                />
+              )}
             />
-          )}
-        />
-        {/* <Resource Container /> */}
+          </Grid.Row>
+        </Grid>
       </Router>
     );
   }

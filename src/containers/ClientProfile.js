@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Button } from "semantic-ui-react";
+import { Container, Button, Grid, Segment } from "semantic-ui-react";
 import ClientCard from "../components/ClientCard";
 import SurveyForm from "../components/SurveyForm";
 import SurveyStatus from "../components/SurveyStatus";
@@ -119,7 +119,7 @@ class ClientProfile extends Component {
     console.log(client.clients_resources); //[{…}, {…}, {…}, {…}]
     const actionAdd = client.clients_resources.map(clientsResource => {
       const resource = resourcesData.find(resourceData => {
-        return resourceData.id === clientsResource.id;
+        return resourceData.id === clientsResource.resource_id;
       });
       console.log(resource.name);
       return (
@@ -207,23 +207,25 @@ class ClientProfile extends Component {
       });
       console.log(clientAction);
       return (
-        <ActionShow
-          clientId={clientAction.client_id}
-          actionId={clientAction.action_id}
-          name={matchingAction.name}
-          form={matchingAction.form}
-          readme={matchingAction.readme}
-          submitAddress={matchingAction.submit_address}
-          description={matchingAction.description}
-          locationName={matchingAction.location_name}
-          contactName={matchingAction.contact_name}
-          contactEmail={matchingAction.contact_email}
-          contactPhone={matchingAction.contact_phone}
-          submitDate={clientAction.submit_date}
-          completeDate={clientAction.complete_date}
-          status={clientAction.status}
-          setActionEdit={this.setActionEdit}
-        />
+        <Segment attached>
+          <ActionShow
+            clientId={clientAction.client_id}
+            actionId={clientAction.action_id}
+            name={matchingAction.name}
+            form={matchingAction.form}
+            readme={matchingAction.readme}
+            submitAddress={matchingAction.submit_address}
+            description={matchingAction.description}
+            locationName={matchingAction.location_name}
+            contactName={matchingAction.contact_name}
+            contactEmail={matchingAction.contact_email}
+            contactPhone={matchingAction.contact_phone}
+            submitDate={clientAction.submit_date}
+            completeDate={clientAction.complete_date}
+            status={clientAction.status}
+            setActionEdit={this.setActionEdit}
+          />
+        </Segment>
       );
     });
 
@@ -233,11 +235,13 @@ class ClientProfile extends Component {
   renderActionUpdate = (client, resourcesData) => {
     const actionAdd = client.clients_resources.map(clientsResource => {
       const resource = resourcesData.find(resourceData => {
-        return resourceData.id === clientsResource.id;
+        return resourceData.id === clientsResource.resource_id;
       });
       console.log(resource.name);
       return (
         <>
+          <br></br>
+          <br></br>
           <ResourceDetails
             name={resource.name}
             description={resource.description}
@@ -268,15 +272,17 @@ class ClientProfile extends Component {
         return resourceAction.id === clientAction.id;
       });
       return (
-        <ActionUpdate
-          clientActionId={clientAction.id}
-          name={matchingAction.name}
-          submitDate={clientAction.submit_date}
-          completeDate={clientAction.complete_date}
-          status={clientAction.status}
-          handleUpdateAction={handleUpdateAction}
-          setActionStatus={this.setActionStatus}
-        />
+        <Segment>
+          <ActionUpdate
+            clientActionId={clientAction.id}
+            name={matchingAction.name}
+            submitDate={clientAction.submit_date}
+            completeDate={clientAction.complete_date}
+            status={clientAction.status}
+            handleUpdateAction={handleUpdateAction}
+            setActionStatus={this.setActionStatus}
+          />
+        </Segment>
       );
     });
 
@@ -294,26 +300,35 @@ class ClientProfile extends Component {
     const { clients, resourcesData } = this.props;
     const client = clients ? this.findClient() : null;
     return (
-      <>
-        {client ? client.first_name : null}
+      <Grid divided="vertically">
+        <Grid.Row columns={2}>
+          <Grid.Column>
+            <ClientCard client={client} />{" "}
+          </Grid.Column>
+          <Grid.Column>
+            {client && resourcesData && isSurveyForm
+              ? this.renderSurveyForm(client, resourcesData)
+              : null}
+            {client && resourcesData && isSurveyStatus
+              ? this.renderSurveyStatus(client, resourcesData)
+              : null}
+          </Grid.Column>
+        </Grid.Row>
 
-        <ClientCard client={client} />
-        {client && resourcesData && isSurveyForm
-          ? this.renderSurveyForm(client, resourcesData)
-          : null}
-        {client && resourcesData && isSurveyStatus
-          ? this.renderSurveyStatus(client, resourcesData)
-          : null}
-        {client && resourcesData && isActionAdd
-          ? this.renderActionAdd(client, resourcesData)
-          : null}
-        {client && resourcesData && isActionStatus
-          ? this.renderActionStatus(client, resourcesData)
-          : null}
-        {client && resourcesData && isActionUpdate
-          ? this.renderActionUpdate(client, resourcesData)
-          : null}
-      </>
+        <Grid.Row columns={1}>
+          <Grid.Column>
+            {client && resourcesData && isActionAdd
+              ? this.renderActionAdd(client, resourcesData)
+              : null}
+            {client && resourcesData && isActionStatus
+              ? this.renderActionStatus(client, resourcesData)
+              : null}
+            {client && resourcesData && isActionUpdate
+              ? this.renderActionUpdate(client, resourcesData)
+              : null}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     );
   }
 }
