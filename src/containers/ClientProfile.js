@@ -89,14 +89,12 @@ class ClientProfile extends Component {
     // return SurveyStatus, pass props, change state
     console.log(client);
     console.log(resourcesData);
-    let clientResources = [];
-    client.clients_resources.forEach(clientsResource => {
-      const matchingResource = resourcesData.filter(resource => {
-        return resource.id === clientsResource.id;
+
+    const clientResources = client.clients_resources.map(clientResource => {
+      const matchingResource = resourcesData.find(resource => {
+        return resource.id === clientResource.resource_id;
       });
-      matchingResource.forEach(resource => {
-        clientResources.push(resource);
-      });
+      return matchingResource;
     });
     const surveyComponents = clientResources.map(resource => {
       return (
@@ -116,6 +114,33 @@ class ClientProfile extends Component {
         </Button>
       </>
     );
+    // let clientResources = [];
+    // client.clients_resources.forEach(clientsResource => {
+    //   const matchingResource = resourcesData.filter(resource => {
+    //     return resource.id === clientsResource.id;
+    //   });
+    //   matchingResource.forEach(resource => {
+    //     clientResources.push(resource);
+    //   });
+    // });
+    // const surveyComponents = clientResources.map(resource => {
+    //   return (
+    //     <SurveyStatus
+    //       name={resource.name}
+    //       // description={resource.description}
+    //       // handleAddResource={this.props.handleAddResource}
+    //       // setSurveyStatus={this.setSurveyStatus}
+    //     />
+    //   );
+    // });
+    // return (
+    //   <>
+    //     {surveyComponents}
+    //     <Button onClick={this.setSurveyForm}>
+    //       Add a resource to list of needs
+    //     </Button>
+    //   </>
+    // );
   };
 
   renderActionAdd = (client, resourcesData) => {
