@@ -315,13 +315,24 @@ class ClientProfile extends Component {
       isActionAdd,
       isActionUpdate
     } = this.state;
-    const { clients, resourcesData } = this.props;
+    const {
+      clients,
+      resourcesData,
+      handleAddClient,
+      fetchUser,
+      userId
+    } = this.props;
     const client = clients ? this.findClient() : null;
     return (
       <Grid divided="vertically">
         <Grid.Row columns={2}>
           <Grid.Column>
-            <ClientCard client={client} />{" "}
+            <ClientCard
+              client={client}
+              handleAddClient={handleAddClient}
+              fetchUser={fetchUser}
+              userId={userId}
+            />{" "}
           </Grid.Column>
           <Grid.Column>
             {client && resourcesData && isSurveyForm

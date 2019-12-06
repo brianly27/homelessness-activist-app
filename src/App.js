@@ -141,8 +141,30 @@ class App extends Component {
       })
     }).then(resp => resp.json());
   };
-  //also retreive actions related to each resource
-  //
+
+  handleAddClient = (userId, clientId) => {
+    this.fetchAddClient(userId, clientId).then(updatedClient => {
+      this.setState(prevState => ({
+        clients: prevState.clients.map(client =>
+          client.id === updatedClient.id ? updatedClient : client
+        ) //check if this is right
+      }));
+    });
+  };
+
+  fetchAddClient = (userId, clientId) => {
+    return fetch(`http://localhost:3000/users_clients`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        userId,
+        clientId
+      })
+    }).then(resp => resp.json());
+  };
 
   render() {
     const { userId, clients, userData, resourcesData } = this.state;
@@ -153,7 +175,8 @@ class App extends Component {
       handleAddAction,
       handleUpdateAction,
       handleAddResource,
-      fetchUser
+      fetchUser,
+      handleAddClient
     } = this;
     return (
       <Router>
@@ -169,6 +192,7 @@ class App extends Component {
                 <ClientsTable
                   {...props}
                   clients={clients}
+                  resourcesData={resourcesData}
                   navigateToClient={navigateToClient}
                 />
               )}
@@ -184,6 +208,9 @@ class App extends Component {
                   handleAddAction={handleAddAction}
                   handleUpdateAction={handleUpdateAction}
                   handleAddResource={handleAddResource}
+                  handleAddClient={handleAddClient}
+                  fetchUser={fetchUser}
+                  userId={userId}
                 />
               )}
             />

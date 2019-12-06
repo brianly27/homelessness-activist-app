@@ -1,7 +1,7 @@
 import React from "react";
-import { Card, Icon, Image } from "semantic-ui-react";
+import { Card, Icon, Image, Button } from "semantic-ui-react";
 
-const ClientCard = ({ client }) => {
+const ClientCard = ({ client, handleAddClient, userId, fetchUser }) => {
   const firstName = client ? client.first_name : "";
   const lastName = client ? client.last_name : "";
   const alias = client ? client.alias : "";
@@ -25,13 +25,21 @@ const ClientCard = ({ client }) => {
         <Card.Description>{`Email: ${email}`}</Card.Description>
         <Card.Description>{`Location: ${location}`}</Card.Description>
         <Card.Description>{`Income: ${income}`}</Card.Description>
-        <Card.Description>{`Alive: ${alive}`}</Card.Description>
+        <Card.Description>{`Alive: ${!alive}`}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <a>
           <Icon name="user" />
           {`Helped by ${numberOfUsers} Users`}
         </a>
+        <Button
+          onClick={() => {
+            handleAddClient(userId, client.id);
+            fetchUser();
+          }}
+        >
+          +
+        </Button>
       </Card.Content>
     </Card>
   );
